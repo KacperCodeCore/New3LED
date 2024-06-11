@@ -21,11 +21,12 @@
 #include "dma.h"
 #include "tim.h"
 #include "gpio.h"
-#include <stdlib.h>
-#include "ws2812b.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdbool.h>
+#include "ws2812b.h"
+
 const uint8_t gamma8[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,
@@ -77,6 +78,15 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+bool is_button_pressed(void) {
+ if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin) == GPIO_PIN_RESET) {
+ return true;
+ } else {
+ return false;
+ }
+}
+
+
 
 /* USER CODE END 0 */
 
@@ -110,9 +120,6 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_TIM3_Init();
-
-
-
   /* USER CODE BEGIN 2 */
 //  HAL_TIM_Base_Start(&htim3);
 //
@@ -141,15 +148,29 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  uint8_t r = gamma8[rand() % 256];
-	  uint8_t g = gamma8[rand() % 256];
-	  uint8_t b = gamma8[rand() % 256];
-
-	  for (int led = 0; led < 6; led++) {
-	    ws2812b_set_color(led, r, g, b);
-	    ws2812b_update();
-	    HAL_Delay(100);
+	  if(is_button_pressed){
+		  uint8_t r = gamma8[rand() % 70];
+		  	  uint8_t g = gamma8[rand() % 70];
+		  	  uint8_t b = gamma8[rand() % 70];
+		  	  for (int led = 0; led < 6; led++) {
+		  	    ws2812b_set_color(led, r, g, b);
+		  	    ws2812b_update();
+		  	    HAL_Delay(100);
+		  	  }
 	  }
+	  else{
+		  uint8_t r = gamma8[rand() % 70];
+		  	  uint8_t g = gamma8[rand() % 70];
+		  	  uint8_t b = gamma8[rand() % 70];
+		  	  for (int led = 0; led < 6; led++) {
+		  	    ws2812b_set_color(led, r, g, b);
+		  	    ws2812b_update();
+		  	    HAL_Delay(100);
+		  	  }
+	  }
+
+
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
