@@ -99,11 +99,11 @@ bool is_user_button_pressed(int button) {
 	      return false;
 	    }
   case 1:
-    if (HAL_GPIO_ReadPin(USER_BUTTON1_GPIO_Port, USER_BUTTON1_Pin) == GPIO_PIN_RESET) {
-      return true;
-    } else {
-      return false;
-    }
+	    if (HAL_GPIO_ReadPin(USER_BUTTON1_GPIO_Port, USER_BUTTON1_Pin) == GPIO_PIN_SET) {
+	      return true;
+	    } else {
+	      return false;
+	    }
 
   default:
     return false;
@@ -177,7 +177,13 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-  	  if (is_user_button_pressed(0)) {
+  	  if (is_user_button_pressed(1)) {
+  		  if(user_button_pressed == false){
+  			  user_button_pressed = true;
+  			directionReverse = !directionReverse;
+  		  }
+  	  }
+  	  else if (is_user_button_pressed(0)) {
   		  if(user_button_pressed == false){
   			  user_button_pressed = true;
   			directionReverse = !directionReverse;
