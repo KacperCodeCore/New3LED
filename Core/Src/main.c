@@ -177,7 +177,18 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  if(is_user_button_pressed(0)) {
+  	  if (is_user_button_pressed(0)) {
+  		  if(user_button_pressed == false){
+  			  user_button_pressed = true;
+  			directionReverse = !directionReverse;
+  		  }
+  	  }
+  	  else{
+  		  user_button_pressed = false;
+  	  }
+
+
+	  if(directionReverse) {
 	          led++;
 	      } else {
 	          led--;
@@ -196,7 +207,7 @@ int main(void)
 
 	      ws2812b_set_color(led, r, g, b);
 	      ws2812b_update();
-	      HAL_Delay(95);
+	      HAL_Delay(100);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
