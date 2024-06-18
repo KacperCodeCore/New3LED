@@ -17,15 +17,16 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-#include "dma.h"
-#include "tim.h"
-#include "gpio.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
 #include "ws2812b.h"
+#include "main.h"
+#include "dma.h"
+#include "tim.h"
+#include "gpio.h"
 
 const uint8_t gamma8[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -80,15 +81,34 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 bool pressed = false;
 
-bool is_button_pressed(void) {
+//bool is_button_pressed(void) {
+//
+//    if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin) == GPIO_PIN_SET) {
+//      return true;
+//    } else {
+//      return false;
+//    }
+//}
 
-    if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin) == GPIO_PIN_SET) {
+bool is_user_button_pressed(int button) {
+  switch (button) {
+  case 0:
+	    if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin) == GPIO_PIN_SET) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+  case 1:
+    if (HAL_GPIO_ReadPin(USER_BUTTON1_GPIO_Port, USER_BUTTON1_Pin) == GPIO_PIN_RESET) {
       return true;
     } else {
       return false;
     }
-}
 
+  default:
+    return false;
+  }
+}
 
 
 
@@ -148,68 +168,35 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   ws2812b_init();
+  bool user_button_pressed = false;
+  int led = 0;
+  bool directionReverse = false;
+  int currentColor = 1;
+
 
   while (1)
   {
     /* USER CODE END WHILE */
-//	  if(!is_button_pressed()){
-//		  uint8_t r = gamma8[rand() % 70];
-//		  	  uint8_t g = gamma8[rand() % 70];
-//		  	  uint8_t b = gamma8[rand() % 70];
-//		  	    ws2812b_set_color(6, r, g, b);
-//		  	    ws2812b_update();
-//		  	    HAL_Delay(100);
-//
-//	  }
+	  if(is_user_button_pressed(0)) {
+	          led++;
+	      } else {
+	          led--;
+	      }
 
+	      // Zapobieganie przekroczeniu zakresu
+	      if(led >= 6) {
+	          led = 0;
+	      } else if(led < 0) {
+	          led = 5;
+	      }
 
-//	  if(is_button_pressed()){
-//		  uint8_t r = gamma8[rand() % 70];
-//		  	  uint8_t g = gamma8[rand() % 70];
-//		  	  uint8_t b = gamma8[rand() % 70];
-//		  	  for (int led = 0; led < 6; led++) {
-//		  	    ws2812b_set_color(led, r, g, b);
-//		  	    ws2812b_update();
-//		  	    HAL_Delay(100);
-//		  	  }
-//	  }
-//	  else{
-//		  uint8_t r = gamma8[rand() % 70];
-//		  	  uint8_t g = gamma8[rand() % 70];
-//		  	  uint8_t b = gamma8[rand() % 70];
-//		  	  for (int led = 0; led < 6; led++) {
-//		  	    ws2812b_set_color(led, r, g, b);
-//		  	    ws2812b_update();
-//		  	    HAL_Delay(100);
-//		  	  }
-//	  }
+	      uint8_t r = gamma8[rand() % 70];
+	      uint8_t g = gamma8[rand() % 70];
+	      uint8_t b = gamma8[rand() % 70];
 
-
-
-	  	  if(is_button_pressed()){
-	  		  led++;
-	  	  }
-	  	  else{
-	  		  led--;
-	  	  }
-  		  uint8_t r = gamma8[rand() % 70];
-  		  uint8_t g = gamma8[rand() % 70];
-  		  uint8_t b = gamma8[rand() % 70];
-
-  		  if(led > 6){
-  			  led = 0;
-  		  }else if(led < 0){
-  			  led = 6;
-  		  }
-
-  		  ws2812b_set_color(led, r, g, b);
-  		  ws2812b_update();
- 	  	  HAL_Delay(100);
-
-
-
-
-
+	      ws2812b_set_color(led, r, g, b);
+	      ws2812b_update();
+	      HAL_Delay(95);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
