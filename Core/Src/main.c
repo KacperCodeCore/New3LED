@@ -17,7 +17,10 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-
+#include "main.h"
+#include "dma.h"
+#include "tim.h"
+#include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -99,11 +102,11 @@ bool is_user_button_pressed(int button) {
 	      return false;
 	    }
   case 1:
-    if (HAL_GPIO_ReadPin(USER_BUTTON1_GPIO_Port, USER_BUTTON1_Pin) == GPIO_PIN_RESET) {
-      return true;
-    } else {
-      return false;
-    }
+	    if (HAL_GPIO_ReadPin(USER_BUTTON1_GPIO_Port, USER_BUTTON1_Pin) == GPIO_PIN_RESET) {
+	      return true;
+	    } else {
+	      return false;
+	    }
 
   default:
     return false;
@@ -177,26 +180,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  if(is_user_button_pressed(0)) {
-	          led++;
-	      } else {
-	          led--;
-	      }
 
-	      // Zapobieganie przekroczeniu zakresu
-	      if(led >= 6) {
-	          led = 0;
-	      } else if(led < 0) {
-	          led = 5;
-	      }
-
-	      uint8_t r = gamma8[rand() % 70];
-	      uint8_t g = gamma8[rand() % 70];
-	      uint8_t b = gamma8[rand() % 70];
-
-	      ws2812b_set_color(led, r, g, b);
-	      ws2812b_update();
-	      HAL_Delay(95);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
